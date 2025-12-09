@@ -47,11 +47,11 @@
             txtBrand = new TextBox();
             txtBarcode = new TextBox();
             panel1 = new Panel();
+            lblSearchResults = new Label();
+            lstSearchResults = new ListBox();
             btnSearchBarcode = new Button();
             lblBarcodeSearch = new Label();
             txtBarcodeSearch = new TextBox();
-            lstSearchResults = new ListBox();
-            lblSearchResults = new Label();
             pnlProductEntry.SuspendLayout();
             panel1.SuspendLayout();
             SuspendLayout();
@@ -151,6 +151,8 @@
             txtCostPrice.Name = "txtCostPrice";
             txtCostPrice.Size = new Size(178, 23);
             txtCostPrice.TabIndex = 24;
+            txtCostPrice.KeyPress += txtCostPrice_KeyPress;
+            txtCostPrice.Leave += txtCostPrice_Leave;
             // 
             // txtSellingPrice
             // 
@@ -158,6 +160,8 @@
             txtSellingPrice.Name = "txtSellingPrice";
             txtSellingPrice.Size = new Size(178, 23);
             txtSellingPrice.TabIndex = 23;
+            txtSellingPrice.KeyPress += txtSellingPrice_KeyPress;
+            txtSellingPrice.Leave += txtSellingPrice_Leave;
             // 
             // lblDecsription
             // 
@@ -236,6 +240,24 @@
             panel1.Size = new Size(431, 520);
             panel1.TabIndex = 16;
             // 
+            // lblSearchResults
+            // 
+            lblSearchResults.AutoSize = true;
+            lblSearchResults.Location = new Point(20, 101);
+            lblSearchResults.Name = "lblSearchResults";
+            lblSearchResults.Size = new Size(82, 15);
+            lblSearchResults.TabIndex = 33;
+            lblSearchResults.Text = "Search Results";
+            // 
+            // lstSearchResults
+            // 
+            lstSearchResults.FormattingEnabled = true;
+            lstSearchResults.ItemHeight = 15;
+            lstSearchResults.Location = new Point(20, 119);
+            lstSearchResults.Name = "lstSearchResults";
+            lstSearchResults.Size = new Size(263, 364);
+            lstSearchResults.TabIndex = 32;
+            // 
             // btnSearchBarcode
             // 
             btnSearchBarcode.Location = new Point(305, 443);
@@ -261,24 +283,6 @@
             txtBarcodeSearch.Name = "txtBarcodeSearch";
             txtBarcodeSearch.Size = new Size(178, 23);
             txtBarcodeSearch.TabIndex = 18;
-            // 
-            // lstSearchResults
-            // 
-            lstSearchResults.FormattingEnabled = true;
-            lstSearchResults.ItemHeight = 15;
-            lstSearchResults.Location = new Point(20, 119);
-            lstSearchResults.Name = "lstSearchResults";
-            lstSearchResults.Size = new Size(263, 364);
-            lstSearchResults.TabIndex = 32;
-            // 
-            // lblSearchResults
-            // 
-            lblSearchResults.AutoSize = true;
-            lblSearchResults.Location = new Point(20, 101);
-            lblSearchResults.Name = "lblSearchResults";
-            lblSearchResults.Size = new Size(82, 15);
-            lblSearchResults.TabIndex = 33;
-            lblSearchResults.Text = "Search Results";
             // 
             // frmEnterProduct
             // 
