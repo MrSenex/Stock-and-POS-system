@@ -51,9 +51,9 @@ namespace Stock_and_POS
             string weightVolume = txtSize.Text;
             string weightVolumeUnit = cmbSize.Text;
             string description = txtDescription.Text;
-            int sellingPrice = int.Parse(txtSellingPrice.Text);
-            int costPrice = int.Parse(txtCostPrice.Text);
-            int leadTime = int.Parse(txtLeadTime.Text);
+            decimal sellingPrice = decimal.Parse(txtSellingPrice.Text);
+            decimal costPrice = decimal.Parse(txtCostPrice.Text);
+            decimal leadTime = decimal.Parse(txtLeadTime.Text);
 
             string checkDuplicateQuery = "SELECT COUNT(Barcode) FROM tblProduct WHERE Barcode = @barcodeToCheck";
 
@@ -209,6 +209,68 @@ namespace Stock_and_POS
                 }
             }
 
+        }
+
+        private void OnlyNumericValues(object sender, KeyPressEventArgs e)
+        {
+            if (char.IsDigit(e.KeyChar) || char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+
+            else if (e.KeyChar == ',')
+            {
+
+                if (((TextBox)sender).Text.Contains(','))
+                {
+                    e.Handled = true;
+                }
+                else
+                {
+                    e.Handled = false;
+                }
+            }
+            else
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void PriceTextBoxLeave(object sender, EventArgs e)
+        {
+            TextBox priceBox = (TextBox)sender;
+            decimal priceValue;
+
+            if (!decimal.TryParse(priceBox.Text, out priceValue))
+            {
+                MessageBox.Show("Please enter a valid price (e.g., 12,50).", "Invalid Input");
+                priceBox.Focus();
+                priceBox.SelectAll();
+            }
+            else
+            {
+                priceBox.Text = priceValue.ToString("N2");
+            }
+        }
+
+        private void txtSellingPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            OnlyNumericValues(sender, e);
+        }
+
+        private void txtCostPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            OnlyNumericValues(sender, e);
+        }
+
+        private void txtSellingPrice_Leave(object sender, EventArgs e)
+        {
+            PriceTextBoxLeave(sender, e);
+        }
+
+        private void txtCostPrice_Leave(object sender, EventArgs e)
+        {
+            PriceTextBoxLeave(sender, e);
         }
     }
 }
