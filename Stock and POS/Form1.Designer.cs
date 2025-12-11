@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             pnlProductEntry = new Panel();
+            btnUpdateProduct = new Button();
             btnAddProduct = new Button();
+            btnSearchBarcode = new Button();
             btnClear = new Button();
-            cmbSize = new ComboBox();
+            cmbWeightVolumeType = new ComboBox();
             lblLeadTime = new Label();
             txtLeadTime = new TextBox();
             lblCostPrice = new Label();
@@ -41,27 +43,23 @@
             lblDecsription = new Label();
             lblWeightVolume = new Label();
             txtDescription = new TextBox();
-            txtSize = new TextBox();
+            txtWeightVolume = new TextBox();
             lblBrand = new Label();
             lblBarcode = new Label();
             txtBrand = new TextBox();
             txtBarcode = new TextBox();
-            panel1 = new Panel();
-            lblSearchResults = new Label();
-            lstSearchResults = new ListBox();
-            btnSearchBarcode = new Button();
-            lblBarcodeSearch = new Label();
-            txtBarcodeSearch = new TextBox();
+            btnSwitchToStock = new Button();
             pnlProductEntry.SuspendLayout();
-            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // pnlProductEntry
             // 
             pnlProductEntry.BackColor = SystemColors.ActiveBorder;
+            pnlProductEntry.Controls.Add(btnUpdateProduct);
             pnlProductEntry.Controls.Add(btnAddProduct);
+            pnlProductEntry.Controls.Add(btnSearchBarcode);
             pnlProductEntry.Controls.Add(btnClear);
-            pnlProductEntry.Controls.Add(cmbSize);
+            pnlProductEntry.Controls.Add(cmbWeightVolumeType);
             pnlProductEntry.Controls.Add(lblLeadTime);
             pnlProductEntry.Controls.Add(txtLeadTime);
             pnlProductEntry.Controls.Add(lblCostPrice);
@@ -71,7 +69,7 @@
             pnlProductEntry.Controls.Add(lblDecsription);
             pnlProductEntry.Controls.Add(lblWeightVolume);
             pnlProductEntry.Controls.Add(txtDescription);
-            pnlProductEntry.Controls.Add(txtSize);
+            pnlProductEntry.Controls.Add(txtWeightVolume);
             pnlProductEntry.Controls.Add(lblBrand);
             pnlProductEntry.Controls.Add(lblBarcode);
             pnlProductEntry.Controls.Add(txtBrand);
@@ -81,9 +79,19 @@
             pnlProductEntry.Size = new Size(407, 520);
             pnlProductEntry.TabIndex = 15;
             // 
+            // btnUpdateProduct
+            // 
+            btnUpdateProduct.Location = new Point(277, 441);
+            btnUpdateProduct.Name = "btnUpdateProduct";
+            btnUpdateProduct.Size = new Size(105, 43);
+            btnUpdateProduct.TabIndex = 32;
+            btnUpdateProduct.Text = "UPDATE PRODUCT";
+            btnUpdateProduct.UseVisualStyleBackColor = true;
+            btnUpdateProduct.Click += btnUpdateProduct_Click;
+            // 
             // btnAddProduct
             // 
-            btnAddProduct.Location = new Point(281, 441);
+            btnAddProduct.Location = new Point(277, 383);
             btnAddProduct.Name = "btnAddProduct";
             btnAddProduct.Size = new Size(105, 43);
             btnAddProduct.TabIndex = 31;
@@ -91,9 +99,19 @@
             btnAddProduct.UseVisualStyleBackColor = true;
             btnAddProduct.Click += btnAddProduct_Click;
             // 
+            // btnSearchBarcode
+            // 
+            btnSearchBarcode.Location = new Point(277, 51);
+            btnSearchBarcode.Name = "btnSearchBarcode";
+            btnSearchBarcode.Size = new Size(105, 43);
+            btnSearchBarcode.TabIndex = 31;
+            btnSearchBarcode.Text = "SEARCH";
+            btnSearchBarcode.UseVisualStyleBackColor = true;
+            btnSearchBarcode.Click += btnSearchBarcode_Click;
+            // 
             // btnClear
             // 
-            btnClear.Location = new Point(281, 383);
+            btnClear.Location = new Point(277, 325);
             btnClear.Name = "btnClear";
             btnClear.Size = new Size(105, 43);
             btnClear.TabIndex = 30;
@@ -101,15 +119,15 @@
             btnClear.UseVisualStyleBackColor = true;
             btnClear.Click += btnClear_Click;
             // 
-            // cmbSize
+            // cmbWeightVolumeType
             // 
-            cmbSize.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmbSize.FormattingEnabled = true;
-            cmbSize.Items.AddRange(new object[] { "grams", "kilograms", "millilitre", "liter" });
-            cmbSize.Location = new Point(107, 185);
-            cmbSize.Name = "cmbSize";
-            cmbSize.Size = new Size(89, 23);
-            cmbSize.TabIndex = 29;
+            cmbWeightVolumeType.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbWeightVolumeType.FormattingEnabled = true;
+            cmbWeightVolumeType.Items.AddRange(new object[] { "grams", "kilograms", "millilitre", "liter" });
+            cmbWeightVolumeType.Location = new Point(107, 185);
+            cmbWeightVolumeType.Name = "cmbWeightVolumeType";
+            cmbWeightVolumeType.Size = new Size(89, 23);
+            cmbWeightVolumeType.TabIndex = 29;
             // 
             // lblLeadTime
             // 
@@ -126,6 +144,7 @@
             txtLeadTime.Name = "txtLeadTime";
             txtLeadTime.Size = new Size(178, 23);
             txtLeadTime.TabIndex = 27;
+            txtLeadTime.Text = "3";
             // 
             // lblCostPrice
             // 
@@ -151,6 +170,7 @@
             txtCostPrice.Name = "txtCostPrice";
             txtCostPrice.Size = new Size(178, 23);
             txtCostPrice.TabIndex = 24;
+            txtCostPrice.Text = "5,90";
             txtCostPrice.KeyPress += txtCostPrice_KeyPress;
             txtCostPrice.Leave += txtCostPrice_Leave;
             // 
@@ -160,6 +180,7 @@
             txtSellingPrice.Name = "txtSellingPrice";
             txtSellingPrice.Size = new Size(178, 23);
             txtSellingPrice.TabIndex = 23;
+            txtSellingPrice.Text = "12,60";
             txtSellingPrice.KeyPress += txtSellingPrice_KeyPress;
             txtSellingPrice.Leave += txtSellingPrice_Leave;
             // 
@@ -187,13 +208,16 @@
             txtDescription.Name = "txtDescription";
             txtDescription.Size = new Size(178, 23);
             txtDescription.TabIndex = 20;
+            txtDescription.Text = "Still Water";
             // 
-            // txtSize
+            // txtWeightVolume
             // 
-            txtSize.Location = new Point(16, 185);
-            txtSize.Name = "txtSize";
-            txtSize.Size = new Size(85, 23);
-            txtSize.TabIndex = 19;
+            txtWeightVolume.Location = new Point(16, 185);
+            txtWeightVolume.Name = "txtWeightVolume";
+            txtWeightVolume.Size = new Size(85, 23);
+            txtWeightVolume.TabIndex = 19;
+            txtWeightVolume.Text = "1,5";
+            txtWeightVolume.KeyPress += txtSize_KeyPress;
             // 
             // lblBrand
             // 
@@ -219,6 +243,7 @@
             txtBrand.Name = "txtBrand";
             txtBrand.Size = new Size(178, 23);
             txtBrand.TabIndex = 16;
+            txtBrand.Text = "Tsitsikamma";
             // 
             // txtBarcode
             // 
@@ -226,85 +251,37 @@
             txtBarcode.Name = "txtBarcode";
             txtBarcode.Size = new Size(178, 23);
             txtBarcode.TabIndex = 15;
+            txtBarcode.Text = "6009604170021";
             // 
-            // panel1
+            // btnSwitchToStock
             // 
-            panel1.BackColor = SystemColors.ActiveBorder;
-            panel1.Controls.Add(lblSearchResults);
-            panel1.Controls.Add(lstSearchResults);
-            panel1.Controls.Add(btnSearchBarcode);
-            panel1.Controls.Add(lblBarcodeSearch);
-            panel1.Controls.Add(txtBarcodeSearch);
-            panel1.Location = new Point(458, 12);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(431, 520);
-            panel1.TabIndex = 16;
-            // 
-            // lblSearchResults
-            // 
-            lblSearchResults.AutoSize = true;
-            lblSearchResults.Location = new Point(20, 101);
-            lblSearchResults.Name = "lblSearchResults";
-            lblSearchResults.Size = new Size(82, 15);
-            lblSearchResults.TabIndex = 33;
-            lblSearchResults.Text = "Search Results";
-            // 
-            // lstSearchResults
-            // 
-            lstSearchResults.FormattingEnabled = true;
-            lstSearchResults.ItemHeight = 15;
-            lstSearchResults.Location = new Point(20, 119);
-            lstSearchResults.Name = "lstSearchResults";
-            lstSearchResults.Size = new Size(263, 364);
-            lstSearchResults.TabIndex = 32;
-            // 
-            // btnSearchBarcode
-            // 
-            btnSearchBarcode.Location = new Point(305, 443);
-            btnSearchBarcode.Name = "btnSearchBarcode";
-            btnSearchBarcode.Size = new Size(105, 43);
-            btnSearchBarcode.TabIndex = 31;
-            btnSearchBarcode.Text = "SEARCH";
-            btnSearchBarcode.UseVisualStyleBackColor = true;
-            btnSearchBarcode.Click += btnSearchBarcode_Click;
-            // 
-            // lblBarcodeSearch
-            // 
-            lblBarcodeSearch.AutoSize = true;
-            lblBarcodeSearch.Location = new Point(20, 33);
-            lblBarcodeSearch.Name = "lblBarcodeSearch";
-            lblBarcodeSearch.Size = new Size(50, 15);
-            lblBarcodeSearch.TabIndex = 19;
-            lblBarcodeSearch.Text = "Barcode";
-            // 
-            // txtBarcodeSearch
-            // 
-            txtBarcodeSearch.Location = new Point(20, 51);
-            txtBarcodeSearch.Name = "txtBarcodeSearch";
-            txtBarcodeSearch.Size = new Size(178, 23);
-            txtBarcodeSearch.TabIndex = 18;
+            btnSwitchToStock.Location = new Point(804, 549);
+            btnSwitchToStock.Name = "btnSwitchToStock";
+            btnSwitchToStock.Size = new Size(219, 51);
+            btnSwitchToStock.TabIndex = 17;
+            btnSwitchToStock.Text = "Update Stock";
+            btnSwitchToStock.UseVisualStyleBackColor = true;
+            btnSwitchToStock.Click += btnSwitchToStock_Click;
             // 
             // frmEnterProduct
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1035, 612);
-            Controls.Add(panel1);
+            Controls.Add(btnSwitchToStock);
             Controls.Add(pnlProductEntry);
             Name = "frmEnterProduct";
             Text = "Enter Products";
             Load += frmEnterProduct_Load;
             pnlProductEntry.ResumeLayout(false);
             pnlProductEntry.PerformLayout();
-            panel1.ResumeLayout(false);
-            panel1.PerformLayout();
             ResumeLayout(false);
         }
 
         #endregion
 
         private Panel pnlProductEntry;
-        private ComboBox cmbSize;
+        private ComboBox cmbWeightVolumeType;
         private Label lblLeadTime;
         private TextBox txtLeadTime;
         private Label lblCostPrice;
@@ -314,18 +291,15 @@
         private Label lblDecsription;
         private Label lblWeightVolume;
         private TextBox txtDescription;
-        private TextBox txtSize;
+        private TextBox txtWeightVolume;
         private Label lblBrand;
         private Label lblBarcode;
         private TextBox txtBrand;
         private TextBox txtBarcode;
         private Button btnAddProduct;
         private Button btnClear;
-        private Panel panel1;
-        private Label lblBarcodeSearch;
-        private TextBox txtBarcodeSearch;
         private Button btnSearchBarcode;
-        private Label lblSearchResults;
-        private ListBox lstSearchResults;
+        private Button btnSwitchToStock;
+        private Button btnUpdateProduct;
     }
 }

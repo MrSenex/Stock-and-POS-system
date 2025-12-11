@@ -5,7 +5,6 @@ namespace Stock_and_POS
 
     public partial class frmEnterProduct : Form
     {
-        private string connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\2002s\Documents\Database\dbStockPOS.accdb";
 
         public frmEnterProduct()
         {
@@ -15,18 +14,6 @@ namespace Stock_and_POS
         private void frmEnterProduct_Load(object sender, EventArgs e)
         {
 
-        }
-
-        private bool validBarcode(string barcode)
-        {
-            string cleanBarcode = barcode.Trim();
-
-            if (string.IsNullOrEmpty(cleanBarcode))
-            {
-                return false;
-            }
-
-            return cleanBarcode.All(char.IsDigit);
         }
 
         private void btnAddProduct_Click(object sender, EventArgs e)
@@ -39,7 +26,7 @@ namespace Stock_and_POS
                 return;
             }
 
-            if (!validBarcode(txtBarcode.Text))
+            if (!InputValidation.validBarcode(txtBarcode.Text))
             {
                 MessageBox.Show("The Barcode must contain only numerical digits (0-9).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtBarcode.Focus();
@@ -48,19 +35,27 @@ namespace Stock_and_POS
 
             string barcode = txtBarcode.Text.Trim();
             string brand = txtBrand.Text;
-            string weightVolume = txtSize.Text;
-            string weightVolumeUnit = cmbSize.Text;
+            string weightVolume = txtWeightVolume.Text;
+            string weightVolumeUnit = cmbWeightVolumeType.Text;
             string description = txtDescription.Text;
-            decimal sellingPrice = decimal.Parse(txtSellingPrice.Text);
-            decimal costPrice = decimal.Parse(txtCostPrice.Text);
-            decimal leadTime = decimal.Parse(txtLeadTime.Text);
+            int leadTime = int.Parse(txtLeadTime.Text);
 
-            string checkDuplicateQuery = "SELECT COUNT(Barcode) FROM tblProduct WHERE Barcode = @barcodeToCheck";
+            System.Globalization.CultureInfo currentCulture = System.Globalization.CultureInfo.CurrentCulture;
+            if (!decimal.TryParse(txtSellingPrice.Text, System.Globalization.NumberStyles.Currency, currentCulture, out decimal sellingPrice) ||
+                !decimal.TryParse(txtCostPrice.Text, System.Globalization.NumberStyles.Currency, currentCulture, out decimal costPrice))
+            {
+                MessageBox.Show("Invalid number format for price. Please check your price input.", "Parsing Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+
+
+            string checkDuplicateQuery = "SELECT COUNT(Barcode) FROM tblProduct WHERE Barcode = @checkBarcode";
 
             string insertProductQuery = "INSERT INTO tblProduct (Barcode, Brand, Description, WeightVolume, WeightVolumeUnit, SellingPrice, CostPrice, LeadTimeDays) " +
                                         "VALUES (@barcode, @brand, @description, @weightVolume, @weightVolumeUnit, @sellingPrice, @costPrice, @leadTime)";
 
-            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            using (OleDbConnection connection = new OleDbConnection(AppConfig.ConnectionString))
             {
                 connection.Open();
 
@@ -68,7 +63,7 @@ namespace Stock_and_POS
 
                 using (OleDbCommand checkCommand = new OleDbCommand(checkDuplicateQuery, connection))
                 {
-                    checkCommand.Parameters.AddWithValue("@barcodeToCheck", barcode);
+                    checkCommand.Parameters.AddWithValue("@checkBarcode", barcode);
 
                     int existingCount = (int)checkCommand.ExecuteScalar();
 
@@ -91,16 +86,17 @@ namespace Stock_and_POS
                         command.Parameters.AddWithValue("@description", description);
                         command.Parameters.AddWithValue("@WeightVolume", weightVolume);
                         command.Parameters.AddWithValue("@WeightVolumeUnit", weightVolumeUnit);
-                        command.Parameters.AddWithValue("@sellingPrice", sellingPrice);
-                        command.Parameters.AddWithValue("@costPrice", costPrice);
+                        command.Parameters.Add("@sellingPrice", OleDbType.Currency).Value = sellingPrice;
+                        command.Parameters.Add("@costPrice", OleDbType.Currency).Value = costPrice;
+
+
                         command.Parameters.AddWithValue("@leadTime", leadTime);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
                         if (rowsAffected > 0)
                         {
-                            MessageBox.Show("Product added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            // Clear fields
+                            MessageBox.Show("Product added successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             clearProductFields();
                         }
                         else
@@ -126,12 +122,12 @@ namespace Stock_and_POS
         {
             txtBarcode.Text = "";
             txtBrand.Text = "";
-            txtSize.Text = "";
+            txtWeightVolume.Text = "";
             txtDescription.Text = "";
             txtSellingPrice.Text = "";
             txtCostPrice.Text = "";
             txtLeadTime.Text = "";
-            cmbSize.SelectedIndex = -1;
+            cmbWeightVolumeType.SelectedIndex = -1;
             txtBarcode.Focus();
         }
 
@@ -142,18 +138,18 @@ namespace Stock_and_POS
 
         private void btnSearchBarcode_Click(object sender, EventArgs e)
         {
-            string barcode = txtBarcodeSearch.Text;
+            string barcode = txtBarcode.Text;
 
-            if (!validBarcode(barcode))
+            if (!InputValidation.validBarcode(barcode))
             {
                 MessageBox.Show("The Barcode must contain only numerical digits (0-9).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtBarcodeSearch.Focus();
+                txtBarcode.Focus();
                 return;
             }
 
             string barcodeSearchQuery = "SELECT * FROM tblProduct WHERE Barcode = @barcode";
 
-            using (OleDbConnection connection = new OleDbConnection(connectionString))
+            using (OleDbConnection connection = new OleDbConnection(AppConfig.ConnectionString))
             {
                 using (OleDbCommand checkCommand = new OleDbCommand(barcodeSearchQuery, connection))
                 {
@@ -167,30 +163,26 @@ namespace Stock_and_POS
                         {
                             if (reader.Read())
                             {
-                                lstSearchResults.Items.Clear();
-
                                 decimal sellingPrice = reader["SellingPrice"] is DBNull ? 0 : Convert.ToDecimal(reader["SellingPrice"]);
                                 decimal costPrice = reader["CostPrice"] is DBNull ? 0 : Convert.ToDecimal(reader["CostPrice"]);
 
-                                lstSearchResults.Items.Add("--- PRODUCT DETAILS ---");
-                                lstSearchResults.Items.Add("Brand: " + reader["Brand"].ToString());
-                                lstSearchResults.Items.Add("Description: " + reader["Description"].ToString());
+                                txtBrand.Text = reader["Brand"].ToString();
+                                txtDescription.Text = reader["Description"].ToString();
 
-                                string weightVolume = reader["WeightVolume"].ToString();
-                                string weightUnit = reader["WeightVolumeUnit"].ToString();
-                                lstSearchResults.Items.Add($"Weight/Volume: {weightVolume} {weightUnit}");
+                                txtWeightVolume.Text = reader["WeightVolume"].ToString();
+                                cmbWeightVolumeType.Text = reader["WeightVolumeUnit"].ToString();
 
-                                lstSearchResults.Items.Add($"Selling Price: {sellingPrice:C}");
-                                lstSearchResults.Items.Add($"Cost Price: {costPrice:C}");
+                                txtSellingPrice.Text = sellingPrice.ToString();
+                                txtCostPrice.Text = costPrice.ToString();
 
-                                lstSearchResults.Items.Add($"Lead Time (Days): {reader["LeadTimeDays"].ToString()}");
+                                txtLeadTime.Text = reader["LeadTimeDays"].ToString();
                             }
                             else
                             {
                                 MessageBox.Show($"No product found with barcode: {barcode}", "Product Not Found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                                 clearProductFields();
                                 txtBarcode.Text = barcode;
-                                txtBarcodeSearch.Focus();
+                                txtBarcode.Focus();
                             }
                         }
                     }
@@ -211,7 +203,160 @@ namespace Stock_and_POS
 
         }
 
-        private void OnlyNumericValues(object sender, KeyPressEventArgs e)
+        private void txtSellingPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            InputValidation.OnlyNumericValues(sender, e);
+        }
+
+        private void txtCostPrice_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            InputValidation.OnlyNumericValues(sender, e);
+        }
+
+        private void txtSellingPrice_Leave(object sender, EventArgs e)
+        {
+            InputValidation.PriceTextBoxLeave(sender, e);
+        }
+
+        private void txtCostPrice_Leave(object sender, EventArgs e)
+        {
+            InputValidation.PriceTextBoxLeave(sender, e);
+        }
+
+        private void txtSize_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            InputValidation.OnlyNumericValues(sender, e);
+        }
+
+        private void btnSwitchToStock_Click(object sender, EventArgs e)
+        {
+            frmStock stockForm = new frmStock();
+            stockForm.Show();
+            this.Hide();
+        }
+
+        private void btnUpdateProduct_Click(object sender, EventArgs e)
+        {
+            string barcode = txtBarcode.Text.Trim();
+
+            if (!InputValidation.validBarcode(barcode))
+            {
+                MessageBox.Show("The Barcode must contain only numerical digits (0-9).", "Invalid Input", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtBarcode.Focus();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(txtLeadTime.Text) || string.IsNullOrEmpty(txtSellingPrice.Text) || string.IsNullOrEmpty(txtCostPrice.Text))
+            {
+                MessageBox.Show("Lead Time, Selling Price, and Cost Price cannot be empty.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string brand = txtBrand.Text;
+            string weightVolume = txtWeightVolume.Text;
+            string weightVolumeUnit = cmbWeightVolumeType.Text;
+            string description = txtDescription.Text;
+
+            if (!int.TryParse(txtLeadTime.Text, out int leadTime))
+            {
+                MessageBox.Show("Invalid number format for Lead Time.", "Parsing Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            System.Globalization.CultureInfo currentCulture = System.Globalization.CultureInfo.CurrentCulture;
+            if (!decimal.TryParse(txtSellingPrice.Text, System.Globalization.NumberStyles.Currency, currentCulture, out decimal sellingPrice) ||
+                !decimal.TryParse(txtCostPrice.Text, System.Globalization.NumberStyles.Currency, currentCulture, out decimal costPrice))
+            {
+                MessageBox.Show("Invalid number format for price. Please check your price input.", "Parsing Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string updateProductQuery = "UPDATE tblProduct SET " +
+                                        "Brand = @brand, " +
+                                        "Description = @description, " +
+                                        "WeightVolume = @weightVolume, " +
+                                        "WeightVolumeUnit = @weightVolumeUnit, " +
+                                        "SellingPrice = @sellingPrice, " +
+                                        "CostPrice = @costPrice, " +
+                                        "LeadTimeDays = @leadTime " +
+                                        "WHERE Barcode = @barcodeKey";
+
+            using (OleDbConnection connection = new OleDbConnection(AppConfig.ConnectionString))
+            {
+                using (OleDbCommand command = new OleDbCommand(updateProductQuery, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+
+                        command.Parameters.AddWithValue("@brand", brand);
+                        command.Parameters.AddWithValue("@description", description);
+                        command.Parameters.AddWithValue("@weightVolume", weightVolume);
+                        command.Parameters.AddWithValue("@weightVolumeUnit", weightVolumeUnit);
+                        command.Parameters.Add("@sellingPrice", OleDbType.Currency).Value = sellingPrice;
+                        command.Parameters.Add("@costPrice", OleDbType.Currency).Value = costPrice;
+                        command.Parameters.AddWithValue("@leadTime", leadTime);
+                        command.Parameters.AddWithValue("@barcodeKey", barcode);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Product details updated successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            clearProductFields();
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Product with barcode {barcode} was not found. Please add it first.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred while updating the product: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+    }
+
+    public static class AppConfig
+    {
+        public const string ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\2002s\Documents\Database\dbStockPOS.accdb";
+    }
+
+
+    public static class InputValidation
+    {
+        public static bool validBarcode(string barcode)
+        {
+            string cleanBarcode = barcode.Trim();
+
+            if (string.IsNullOrEmpty(cleanBarcode))
+            {
+                return false;
+            }
+
+            return cleanBarcode.All(char.IsDigit);
+        }
+
+        public static void PriceTextBoxLeave(object sender, EventArgs e)
+        {
+            TextBox priceBox = (TextBox)sender;
+            decimal priceValue;
+
+            if (!decimal.TryParse(priceBox.Text, out priceValue))
+            {
+                MessageBox.Show("Please enter a valid price (e.g., 12,50).", "Invalid Input");
+                priceBox.Focus();
+                priceBox.SelectAll();
+            }
+            else
+            {
+                priceBox.Text = priceValue.ToString("N2");
+            }
+        }
+
+        public static void OnlyNumericValues(object sender, KeyPressEventArgs e)
         {
             if (char.IsDigit(e.KeyChar) || char.IsControl(e.KeyChar))
             {
@@ -234,43 +379,6 @@ namespace Stock_and_POS
             {
                 e.Handled = true;
             }
-        }
-
-        private void PriceTextBoxLeave(object sender, EventArgs e)
-        {
-            TextBox priceBox = (TextBox)sender;
-            decimal priceValue;
-
-            if (!decimal.TryParse(priceBox.Text, out priceValue))
-            {
-                MessageBox.Show("Please enter a valid price (e.g., 12,50).", "Invalid Input");
-                priceBox.Focus();
-                priceBox.SelectAll();
-            }
-            else
-            {
-                priceBox.Text = priceValue.ToString("N2");
-            }
-        }
-
-        private void txtSellingPrice_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            OnlyNumericValues(sender, e);
-        }
-
-        private void txtCostPrice_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            OnlyNumericValues(sender, e);
-        }
-
-        private void txtSellingPrice_Leave(object sender, EventArgs e)
-        {
-            PriceTextBoxLeave(sender, e);
-        }
-
-        private void txtCostPrice_Leave(object sender, EventArgs e)
-        {
-            PriceTextBoxLeave(sender, e);
         }
     }
 }
