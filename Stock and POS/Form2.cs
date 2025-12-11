@@ -125,16 +125,34 @@ namespace Stock_and_POS
                 return;
             }
 
-            if (!int.TryParse(txtQuantityToAdd.Text, out int newQuantity))
+            if (!int.TryParse(quantityText, out int newQuantity))
             {
-                MessageBox.Show("Please enter a quantity to add.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please enter a quantity to add/remove.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtQuantityToAdd.Focus();
                 return;
             }
 
             if (chkRemoveStock.Checked)
             {
+                // Confirmation for stock removal
+                DialogResult result = MessageBox.Show(
+                    "Are you sure you want to remove stock? This action will decrease the current stock quantity.",
+                    "Confirm Stock Removal",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (result == DialogResult.No)
+                {
+                    return;
+                }
                 newQuantity = -newQuantity;
+            }
+
+            if (newQuantity + _currentStockOnForm < 0)
+            {
+                MessageBox.Show("Cannot remove more stock than is currently available.", "Invalid Operation", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtQuantityToAdd.Focus();
+                return;
             }
 
             using (OleDbConnection connection = new OleDbConnection(AppConfig.ConnectionString))
