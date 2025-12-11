@@ -29,23 +29,26 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            chkRemoveStock = new CheckBox();
             lblQuantityToAdd = new Label();
             txtQuantityToAdd = new TextBox();
-            btnAddStock = new Button();
+            btnUpdateStock = new Button();
             lblSearchResults = new Label();
             lstSearchResults = new ListBox();
             btnSearchBarcode = new Button();
             lblBarcodeSearch = new Label();
             txtBarcodeSearch = new TextBox();
+            btnSwitchToProducts = new Button();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
             // 
             panel1.BackColor = SystemColors.ActiveBorder;
+            panel1.Controls.Add(chkRemoveStock);
             panel1.Controls.Add(lblQuantityToAdd);
             panel1.Controls.Add(txtQuantityToAdd);
-            panel1.Controls.Add(btnAddStock);
+            panel1.Controls.Add(btnUpdateStock);
             panel1.Controls.Add(lblSearchResults);
             panel1.Controls.Add(lstSearchResults);
             panel1.Controls.Add(btnSearchBarcode);
@@ -55,6 +58,16 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(431, 520);
             panel1.TabIndex = 17;
+            // 
+            // chkRemoveStock
+            // 
+            chkRemoveStock.AutoSize = true;
+            chkRemoveStock.Location = new Point(305, 430);
+            chkRemoveStock.Name = "chkRemoveStock";
+            chkRemoveStock.Size = new Size(122, 19);
+            chkRemoveStock.TabIndex = 37;
+            chkRemoveStock.Text = "SUBTRACT STOCK";
+            chkRemoveStock.UseVisualStyleBackColor = true;
             // 
             // lblQuantityToAdd
             // 
@@ -73,16 +86,16 @@
             txtQuantityToAdd.TabIndex = 35;
             txtQuantityToAdd.KeyPress += textBox1_KeyPress;
             // 
-            // btnAddStock
+            // btnUpdateStock
             // 
-            btnAddStock.Enabled = false;
-            btnAddStock.Location = new Point(305, 457);
-            btnAddStock.Name = "btnAddStock";
-            btnAddStock.Size = new Size(105, 43);
-            btnAddStock.TabIndex = 34;
-            btnAddStock.Text = "ADD STOCK";
-            btnAddStock.UseVisualStyleBackColor = true;
-            btnAddStock.Click += btnAddStock_Click;
+            btnUpdateStock.Enabled = false;
+            btnUpdateStock.Location = new Point(305, 455);
+            btnUpdateStock.Name = "btnUpdateStock";
+            btnUpdateStock.Size = new Size(105, 43);
+            btnUpdateStock.TabIndex = 34;
+            btnUpdateStock.Text = "UPDATE STOCK";
+            btnUpdateStock.UseVisualStyleBackColor = true;
+            btnUpdateStock.Click += btnAddStock_Click;
             // 
             // lblSearchResults
             // 
@@ -128,11 +141,22 @@
             txtBarcodeSearch.Size = new Size(178, 23);
             txtBarcodeSearch.TabIndex = 18;
             // 
+            // btnSwitchToProducts
+            // 
+            btnSwitchToProducts.Location = new Point(864, 559);
+            btnSwitchToProducts.Name = "btnSwitchToProducts";
+            btnSwitchToProducts.Size = new Size(219, 51);
+            btnSwitchToProducts.TabIndex = 18;
+            btnSwitchToProducts.Text = "Update Products";
+            btnSwitchToProducts.UseVisualStyleBackColor = true;
+            btnSwitchToProducts.Click += btnSwitchToProducts_Click;
+            // 
             // frmStock
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1095, 622);
+            Controls.Add(btnSwitchToProducts);
             Controls.Add(panel1);
             Name = "frmStock";
             Text = "Enter Stock";
@@ -151,6 +175,8 @@
         private TextBox txtBarcodeSearch;
         private Label lblQuantityToAdd;
         private TextBox txtQuantityToAdd;
-        private Button btnAddStock;
+        private Button btnUpdateStock;
+        private Button btnSwitchToProducts;
+        private CheckBox chkRemoveStock;
     }
 }

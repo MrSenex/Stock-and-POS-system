@@ -13,6 +13,7 @@ namespace Stock_and_POS
 {
     public partial class frmStock : Form
     {
+        private int _currentStockOnForm = 0;
         public frmStock()
         {
             InitializeComponent();
@@ -29,7 +30,16 @@ namespace Stock_and_POS
                 return;
             }
 
-            string barcodeSearchQuery = "SELECT * FROM tblProduct WHERE Barcode = @barcode";
+            string barcodeSearchQuery = @"
+                                            SELECT 
+                                                P.*, 
+                                                S.Quantity 
+                                            FROM 
+                                                tblProduct AS P
+                                            LEFT JOIN 
+                                                tblStock AS S ON P.Barcode = S.Barcode
+                                            WHERE 
+                                                P.Barcode = @barcode";
 
             using (OleDbConnection connection = new OleDbConnection(AppConfig.ConnectionString))
             {
@@ -49,6 +59,8 @@ namespace Stock_and_POS
 
                                 decimal sellingPrice = reader["SellingPrice"] is DBNull ? 0 : Convert.ToDecimal(reader["SellingPrice"]);
                                 decimal costPrice = reader["CostPrice"] is DBNull ? 0 : Convert.ToDecimal(reader["CostPrice"]);
+                                int currentQuantity = reader["Quantity"] is DBNull ? 0 : Convert.ToInt32(reader["Quantity"]);
+                                _currentStockOnForm = currentQuantity;
 
                                 lstSearchResults.Items.Add("--- PRODUCT DETAILS ---");
                                 lstSearchResults.Items.Add("Brand: " + reader["Brand"].ToString());
@@ -63,7 +75,9 @@ namespace Stock_and_POS
 
                                 lstSearchResults.Items.Add($"Lead Time (Days): {reader["LeadTimeDays"].ToString()}");
 
-                                btnAddStock.Enabled = true;
+                                lstSearchResults.Items.Add($"*** Current Stock: {currentQuantity} ***");
+
+                                btnUpdateStock.Enabled = true;
                             }
                             else
                             {
@@ -88,12 +102,91 @@ namespace Stock_and_POS
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            InputValidation.OnlyNumericValues(sender, e);
+            if (char.IsDigit(e.KeyChar) || char.IsControl(e.KeyChar))
+            {
+                e.Handled = false;
+            }
+            else
+            {
+                e.Handled = true;
+            }
         }
 
         private void btnAddStock_Click(object sender, EventArgs e)
         {
-            btnAddStock.Enabled = false;
+            string updateStockQuery = "UPDATE tblStock SET Quantity = Quantity + @quantityChange WHERE Barcode = @barcode";
+            string barcode = txtBarcodeSearch.Text;
+            string quantityText = txtQuantityToAdd.Text;
+
+            if (string.IsNullOrWhiteSpace(quantityText) || quantityText == "0")
+            {
+                MessageBox.Show("Please enter a quantity to add.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtQuantityToAdd.Focus();
+                return;
+            }
+
+            if (!int.TryParse(txtQuantityToAdd.Text, out int newQuantity))
+            {
+                MessageBox.Show("Please enter a quantity to add.", "Input Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtQuantityToAdd.Focus();
+                return;
+            }
+
+            if (chkRemoveStock.Checked)
+            {
+                newQuantity = -newQuantity;
+            }
+
+            using (OleDbConnection connection = new OleDbConnection(AppConfig.ConnectionString))
+            {
+                using (OleDbCommand command = new OleDbCommand(updateStockQuery, connection))
+                {
+                    try
+                    {
+                        connection.Open();
+                        command.Parameters.AddWithValue("@quantity", newQuantity);
+                        command.Parameters.AddWithValue("@barcode", barcode);
+
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show($"Stock updated successfully from {_currentStockOnForm} to {newQuantity + _currentStockOnForm}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            clearStockFields();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Stock update was not saved. No rows affected.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("An error occurred while updating the stock: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (connection.State == System.Data.ConnectionState.Open)
+                        {
+                            connection.Close();
+                        }
+                    }
+                }
+            }
+        }
+
+        private void clearStockFields()
+        {
+            btnUpdateStock.Enabled = false;
+            lstSearchResults.Items.Clear();
+            txtQuantityToAdd.Text = "";
+        }
+
+        private void btnSwitchToProducts_Click(object sender, EventArgs e)
+        {
+            frmEnterProduct productForm = new frmEnterProduct();
+            productForm.Show();
+            this.Close();
         }
     }
 }
