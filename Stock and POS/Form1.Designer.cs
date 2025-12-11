@@ -144,7 +144,6 @@
             txtLeadTime.Name = "txtLeadTime";
             txtLeadTime.Size = new Size(178, 23);
             txtLeadTime.TabIndex = 27;
-            txtLeadTime.Text = "3";
             // 
             // lblCostPrice
             // 
@@ -170,7 +169,6 @@
             txtCostPrice.Name = "txtCostPrice";
             txtCostPrice.Size = new Size(178, 23);
             txtCostPrice.TabIndex = 24;
-            txtCostPrice.Text = "5,90";
             txtCostPrice.KeyPress += txtCostPrice_KeyPress;
             txtCostPrice.Leave += txtCostPrice_Leave;
             // 
@@ -180,7 +178,6 @@
             txtSellingPrice.Name = "txtSellingPrice";
             txtSellingPrice.Size = new Size(178, 23);
             txtSellingPrice.TabIndex = 23;
-            txtSellingPrice.Text = "12,60";
             txtSellingPrice.KeyPress += txtSellingPrice_KeyPress;
             txtSellingPrice.Leave += txtSellingPrice_Leave;
             // 
@@ -208,7 +205,6 @@
             txtDescription.Name = "txtDescription";
             txtDescription.Size = new Size(178, 23);
             txtDescription.TabIndex = 20;
-            txtDescription.Text = "Still Water";
             // 
             // txtWeightVolume
             // 
@@ -216,7 +212,6 @@
             txtWeightVolume.Name = "txtWeightVolume";
             txtWeightVolume.Size = new Size(85, 23);
             txtWeightVolume.TabIndex = 19;
-            txtWeightVolume.Text = "1,5";
             txtWeightVolume.KeyPress += txtSize_KeyPress;
             // 
             // lblBrand
@@ -243,7 +238,6 @@
             txtBrand.Name = "txtBrand";
             txtBrand.Size = new Size(178, 23);
             txtBrand.TabIndex = 16;
-            txtBrand.Text = "Tsitsikamma";
             // 
             // txtBarcode
             // 
