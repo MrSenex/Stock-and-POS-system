@@ -101,7 +101,7 @@
             // 
             // btnSearchBarcode
             // 
-            btnSearchBarcode.Location = new Point(277, 51);
+            btnSearchBarcode.Location = new Point(277, 40);
             btnSearchBarcode.Name = "btnSearchBarcode";
             btnSearchBarcode.Size = new Size(105, 43);
             btnSearchBarcode.TabIndex = 31;
@@ -246,6 +246,8 @@
             txtBarcode.Size = new Size(178, 23);
             txtBarcode.TabIndex = 15;
             txtBarcode.Text = "6009604170021";
+            txtBarcode.TextChanged += txtBarcode_TextChanged;
+            txtBarcode.KeyPress += txtBarcode_KeyPress;
             // 
             // btnSwitchToStock
             // 

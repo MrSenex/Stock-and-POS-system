@@ -317,11 +317,27 @@ namespace Stock_and_POS
                 }
             }
         }
+
+        private void txtBarcode_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBarcode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                btnSearchBarcode.PerformClick();
+                e.Handled = true;
+                txtBarcode.Focus();
+                txtBarcode.SelectAll();
+            }
+        }
     }
 
     public static class AppConfig
     {
-        public const string ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\2002s\Documents\Database\dbStockPOS.accdb";
+        public const string ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\2002s\source\repos\Stock and POS\Database\dbStockPOS.accdb";
     }
 
 
