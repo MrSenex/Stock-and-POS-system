@@ -321,7 +321,7 @@ namespace Stock_and_POS
 
     public static class AppConfig
     {
-        public const string ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\2002s\Documents\Database\dbStockPOS.accdb";
+        public const string ConnectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\2002s\source\repos\Stock and POS\Database\dbStockPOS.accdb";
     }
 
 

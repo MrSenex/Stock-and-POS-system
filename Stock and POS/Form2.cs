@@ -136,7 +136,7 @@ namespace Stock_and_POS
             {
                 // Confirmation for stock removal
                 DialogResult result = MessageBox.Show(
-                    "Are you sure you want to remove stock? This action will decrease the current stock quantity.",
+                    "Are you sure you want to REMOVE stock?",
                     "Confirm Stock Removal",
                     MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning);
