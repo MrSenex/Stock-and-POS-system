@@ -204,7 +204,16 @@ namespace Stock_and_POS
         {
             frmEnterProduct productForm = new frmEnterProduct();
             productForm.Show();
-            this.Close();
+            this.Hide();
+        }
+
+        private void txtBarcodeSearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                btnSearchBarcode.PerformClick();
+                e.Handled = true;
+            }
         }
     }
 }

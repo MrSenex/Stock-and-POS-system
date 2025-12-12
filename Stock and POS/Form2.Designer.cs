@@ -140,6 +140,7 @@
             txtBarcodeSearch.Name = "txtBarcodeSearch";
             txtBarcodeSearch.Size = new Size(178, 23);
             txtBarcodeSearch.TabIndex = 18;
+            txtBarcodeSearch.KeyPress += txtBarcodeSearch_KeyPress;
             // 
             // btnSwitchToProducts
             // 

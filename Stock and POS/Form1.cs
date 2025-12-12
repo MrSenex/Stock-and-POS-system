@@ -317,6 +317,22 @@ namespace Stock_and_POS
                 }
             }
         }
+
+        private void txtBarcode_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBarcode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                btnSearchBarcode.PerformClick();
+                e.Handled = true;
+                txtBarcode.Focus();
+                txtBarcode.SelectAll();
+            }
+        }
     }
 
     public static class AppConfig
