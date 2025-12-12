@@ -54,17 +54,19 @@
             panel1.Controls.Add(btnSearchBarcode);
             panel1.Controls.Add(lblBarcodeSearch);
             panel1.Controls.Add(txtBarcodeSearch);
-            panel1.Location = new Point(12, 25);
+            panel1.Location = new Point(14, 33);
+            panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(431, 520);
+            panel1.Size = new Size(493, 693);
             panel1.TabIndex = 17;
             // 
             // chkRemoveStock
             // 
             chkRemoveStock.AutoSize = true;
-            chkRemoveStock.Location = new Point(305, 430);
+            chkRemoveStock.Location = new Point(341, 575);
+            chkRemoveStock.Margin = new Padding(3, 4, 3, 4);
             chkRemoveStock.Name = "chkRemoveStock";
-            chkRemoveStock.Size = new Size(122, 19);
+            chkRemoveStock.Size = new Size(149, 24);
             chkRemoveStock.TabIndex = 37;
             chkRemoveStock.Text = "SUBTRACT STOCK";
             chkRemoveStock.UseVisualStyleBackColor = true;
@@ -72,26 +74,28 @@
             // lblQuantityToAdd
             // 
             lblQuantityToAdd.AutoSize = true;
-            lblQuantityToAdd.Location = new Point(20, 457);
+            lblQuantityToAdd.Location = new Point(23, 609);
             lblQuantityToAdd.Name = "lblQuantityToAdd";
-            lblQuantityToAdd.Size = new Size(53, 15);
+            lblQuantityToAdd.Size = new Size(65, 20);
             lblQuantityToAdd.TabIndex = 36;
             lblQuantityToAdd.Text = "Quantity";
             // 
             // txtQuantityToAdd
             // 
-            txtQuantityToAdd.Location = new Point(20, 475);
+            txtQuantityToAdd.Location = new Point(23, 633);
+            txtQuantityToAdd.Margin = new Padding(3, 4, 3, 4);
             txtQuantityToAdd.Name = "txtQuantityToAdd";
-            txtQuantityToAdd.Size = new Size(178, 23);
+            txtQuantityToAdd.Size = new Size(203, 27);
             txtQuantityToAdd.TabIndex = 35;
             txtQuantityToAdd.KeyPress += textBox1_KeyPress;
             // 
             // btnUpdateStock
             // 
             btnUpdateStock.Enabled = false;
-            btnUpdateStock.Location = new Point(305, 455);
+            btnUpdateStock.Location = new Point(349, 607);
+            btnUpdateStock.Margin = new Padding(3, 4, 3, 4);
             btnUpdateStock.Name = "btnUpdateStock";
-            btnUpdateStock.Size = new Size(105, 43);
+            btnUpdateStock.Size = new Size(120, 57);
             btnUpdateStock.TabIndex = 34;
             btnUpdateStock.Text = "UPDATE STOCK";
             btnUpdateStock.UseVisualStyleBackColor = true;
@@ -100,26 +104,27 @@
             // lblSearchResults
             // 
             lblSearchResults.AutoSize = true;
-            lblSearchResults.Location = new Point(20, 101);
+            lblSearchResults.Location = new Point(23, 135);
             lblSearchResults.Name = "lblSearchResults";
-            lblSearchResults.Size = new Size(82, 15);
+            lblSearchResults.Size = new Size(103, 20);
             lblSearchResults.TabIndex = 33;
             lblSearchResults.Text = "Search Results";
             // 
             // lstSearchResults
             // 
             lstSearchResults.FormattingEnabled = true;
-            lstSearchResults.ItemHeight = 15;
-            lstSearchResults.Location = new Point(20, 119);
+            lstSearchResults.Location = new Point(23, 159);
+            lstSearchResults.Margin = new Padding(3, 4, 3, 4);
             lstSearchResults.Name = "lstSearchResults";
-            lstSearchResults.Size = new Size(390, 184);
+            lstSearchResults.Size = new Size(445, 244);
             lstSearchResults.TabIndex = 32;
             // 
             // btnSearchBarcode
             // 
-            btnSearchBarcode.Location = new Point(305, 51);
+            btnSearchBarcode.Location = new Point(349, 68);
+            btnSearchBarcode.Margin = new Padding(3, 4, 3, 4);
             btnSearchBarcode.Name = "btnSearchBarcode";
-            btnSearchBarcode.Size = new Size(105, 43);
+            btnSearchBarcode.Size = new Size(120, 57);
             btnSearchBarcode.TabIndex = 31;
             btnSearchBarcode.Text = "SEARCH";
             btnSearchBarcode.UseVisualStyleBackColor = true;
@@ -128,25 +133,27 @@
             // lblBarcodeSearch
             // 
             lblBarcodeSearch.AutoSize = true;
-            lblBarcodeSearch.Location = new Point(20, 33);
+            lblBarcodeSearch.Location = new Point(23, 44);
             lblBarcodeSearch.Name = "lblBarcodeSearch";
-            lblBarcodeSearch.Size = new Size(50, 15);
+            lblBarcodeSearch.Size = new Size(64, 20);
             lblBarcodeSearch.TabIndex = 19;
             lblBarcodeSearch.Text = "Barcode";
             // 
             // txtBarcodeSearch
             // 
-            txtBarcodeSearch.Location = new Point(20, 51);
+            txtBarcodeSearch.Location = new Point(23, 68);
+            txtBarcodeSearch.Margin = new Padding(3, 4, 3, 4);
             txtBarcodeSearch.Name = "txtBarcodeSearch";
-            txtBarcodeSearch.Size = new Size(178, 23);
+            txtBarcodeSearch.Size = new Size(203, 27);
             txtBarcodeSearch.TabIndex = 18;
             txtBarcodeSearch.KeyPress += txtBarcodeSearch_KeyPress;
             // 
             // btnSwitchToProducts
             // 
-            btnSwitchToProducts.Location = new Point(864, 559);
+            btnSwitchToProducts.Location = new Point(987, 745);
+            btnSwitchToProducts.Margin = new Padding(3, 4, 3, 4);
             btnSwitchToProducts.Name = "btnSwitchToProducts";
-            btnSwitchToProducts.Size = new Size(219, 51);
+            btnSwitchToProducts.Size = new Size(250, 68);
             btnSwitchToProducts.TabIndex = 18;
             btnSwitchToProducts.Text = "Update Products";
             btnSwitchToProducts.UseVisualStyleBackColor = true;
@@ -154,11 +161,12 @@
             // 
             // frmStock
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1095, 622);
+            ClientSize = new Size(1251, 829);
             Controls.Add(btnSwitchToProducts);
             Controls.Add(panel1);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "frmStock";
             Text = "Enter Stock";
             panel1.ResumeLayout(false);

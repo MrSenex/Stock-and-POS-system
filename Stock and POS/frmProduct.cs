@@ -333,6 +333,13 @@ namespace Stock_and_POS
                 txtBarcode.SelectAll();
             }
         }
+
+        private void btnSaleScreen_Click(object sender, EventArgs e)
+        {
+            frmSale saleForm = new frmSale();   
+            saleForm.Show();
+            this.Hide();
+        }
     }
 
     public static class AppConfig
